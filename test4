@@ -1,0 +1,39 @@
+print(7 == 7)
+print(5 != 7)
+print(5 < 3)
+print(5 < 7)
+print(5 >= 4)
+print(8 <= 7)
+
+temp = 85
+temp_ok = 60 <= temp and temp <= 90
+print(temp_ok)
+pressure = 5
+pres_ok =3 <= pressure and pressure <= 7
+print(pres_ok)
+print(temp_ok and pres_ok)
+
+stock = 100
+stock += 50
+print(stock)   # 150  (입고)
+stock -= 30
+print(stock)   # 120  (출고)
+stock += 5
+print(stock)   # 125  (반품)
+
+total = 500
+defect = 23
+print(defect / total * 100, "%")   # 4.6   (불량률 %)
+run_h = 21
+all_h = 24
+print(run_h / all_h * 100, "%")    # 87.5  (가동률 %)
+
+minutes = 500
+print(minutes // 60)   # 8   (시간)
+print(minutes % 60)    # 20  (분)
+print(minutes // 60, "시간", minutes % 60, "분")
+
+minutes = 500
+print(minutes // 60)   # 8   (시간)
+print(minutes % 60)    # 20  (분)
+print(minutes // 60, "시간", minutes % 60, "분")

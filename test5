@@ -1,0 +1,18 @@
+nation = input("대한민국")
+city = input("포항")
+print(nation, city)
+
+a = int(input("수1:" ))
+b = int(input("수2:" ))
+print("합:", a + b)
+print("나눗셈:", a / b)
+
+temp = int(input("온도:"))
+print("70 초과?", temp > 70)
+print("30 이상?", temp >=30)
+
+x = int(input("점수1:"))
+y = int(input("점수2:"))
+z = int(input("점수3:"))
+avg = (x + y + z) / 3
+print("70 이상?", avg >= 70)
