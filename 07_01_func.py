@@ -11,7 +11,15 @@
 # 호출: 함수 이름 적고 괄호를 붙이기
 #greet()           # 점검을 시작합니다
 
-def greet():
+#def greet():
+#    print("점검을 시작합니다")
+#greet()
+#greet()
+
+def start_check():
     print("점검을 시작합니다")
-greet()
-greet()
+    print("안전 장비를 확인하세요")
+    print("기록을 준비하세요")
+start_check()
+start_check()
+
