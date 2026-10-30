@@ -53,14 +53,47 @@
 #files = os.listdir("data")
 #print(files)                                    # ['08_press_13_261029_3.csv']
 
-import os
-cwd = os.getcwd()
-print("현재 경로:", cwd)
-files = os.listdir(cwd)
-for name in files:
-    print(name)
+# 폴더명 + 파일명 -> 경로
+#path = os.path.join("data", "08_press.csv")
 
+#import os
+#folder = "data"
+#print("현재 경로:", os.getcwd())
+#files = os.listdir(folder)
+#print("폴더 안 파일들")
+#for name in files:
+#    print(name)
+#print(".csv 파일만")
+#for name in files:
+#    if name.endswith(".csv"):
+#        print(name)
+
+#import os
+#path = os.path.join("data", "08_press_13_261029_3.csv")
+#print("경로:", path)
+#found= os.path.exists(path)
+#print(found)
+#if found:
+#    print("파일 있음")
+#else:
+#    print("파일 없음")
+
+#import os
+#from datetime import datetime
+#count = len(os.listdir("data"))
+#now = datetime.now()
+#print(f'파일 {count}개, 점검시작 {now}')
+
+import os
+folder = "data"
+files = os.listdir(folder)
+csv_files = []
 for name in files:
     if name.endswith(".csv"):
-        print(name)
+        csv_files.append(name)
 
+csv_paths = []
+for name in csv_files:
+    csv_paths.append(os.path.join(folder, name))
+
+print("[csv]", csv_files)
