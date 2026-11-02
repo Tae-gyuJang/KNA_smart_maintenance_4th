@@ -58,13 +58,32 @@
 #       print(row)
 
 # csv.writer
-import csv
-with open("data/08_summary.csv", "w", encoding="utf-8", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["설비ID", "상태"])
-    writer.writerow("PRESS-01", 1)
-    writer.writerow("PRESS-02", 1)
+#import csv
+##with open("data/08_summary.csv", "w", encoding="utf-8", newline="") as f:
+#    writer = csv.writer(f)
+#    writer.writerow(["설비ID", "상태"])
+#    writer.writerow("PRESS-01", 1)
+#    writer.writerow("PRESS-02", 1)
 
-with open("data/08_summary.csv", "r", encoding="utf-8") as f:
-    print(f.read())
+#with open("data/08_summary.csv", "r", encoding="utf-8") as f:
+#    print(f.read())
+
+import csv
+src = "data/08_press.csv"
+dst = "data/over90.csv"
+
+with open(src, "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    header = next(reader)
+
+    rows =[]
+    for row in reader:
+        if float(row[4]) > 90:
+            rows.append(row)
+
+with open(dst, "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    writer.writerows(rows)
+print(f'{len(rows)}개 행 저장 완료 → {dst}')
 
