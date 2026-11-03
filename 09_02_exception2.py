@@ -53,21 +53,52 @@
 
 #print("합계:", round(total, 1), "/건너뜀:", skipped)    
 
-try:
-    with open("data/09_ict_inspection_15_261102_1.csv", encoding="utf-8") as f:
-        rows = f.readlines()[1:]
-except FileNotFoundError:
-    rows = []
+#try:
+#    with open("data/09_ict_inspection_15_261102_1.csv", encoding="utf-8") as f:
+#        rows = f.readlines()[1:]
+#except FileNotFoundError:
+#    rows = []
 
-total, valid = 0.0, 0
-for line in rows:
+#total, valid = 0.0, 0
+#for line in rows:
+#    try:
+#        value = float(line.split(",")[2])   
+#        total += value                       
+#        valid += 1                           
+#    except ValueError:
+#        pass                                 
+#    except IndexError:
+#        pass                                 
+
+#print(f"합계: {total:.2f} / 유효: {valid} / 제외: {len(rows) - valid}")
+
+#names = ["data/09_ict_inspection_15_261102_1.csv","data/09_없는파일.csv","data/09_ict_inspection_dirty_15_261102_2.csv",]
+#done = 0
+
+#for name in names:
+#    try:
+#        with open(name, encoding="utf-8") as f:
+#            rows = f.readlines()[1:]          
+#        print(f'{name}: {len(rows)}행')       
+#        done += 1                             
+#    except FileNotFoundError:
+#        print(f'{name}: 파일이 없어 건너뜀')  
+#        continue
+
+#print("처리한 파일:", done)
+
+
+def check_value(text, lo=0.0, hi=5000.0):
     try:
-        value = float(line.split(",")[2])   
-        total += value                       
-        valid += 1                           
+        v = float(text)
     except ValueError:
-        pass                                 
-    except IndexError:
-        pass                                 
+        raise ValueError("변환 실패")         
+    if v < lo or v > hi:
+        raise ValueError("범위 밖")             
+    return v
 
-print(f"합계: {total:.2f} / 유효: {valid} / 제외: {len(rows) - valid}")
+for t in ["128.5", "결측", "-999"]:
+    try:
+        print("통과:", check_value(t))
+    except ValueError as e:
+        print("제외:", e)
