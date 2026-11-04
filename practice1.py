@@ -3,7 +3,8 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 DATA_PATH = BASE / "data" / "09_ict_inspection_dirty.csv"
 REPORT_PATH = BASE / "09_report.txt"
-RUN_TO_STEP = 5
+RUN_TO_STEP = 6
+
 
 def read_csv_data(path):
     """[실습 1] (헤더 리스트, 데이터 행 리스트) 반환. 파일이 없으면 ([], [])."""
@@ -63,32 +64,48 @@ def calc_stats(rows, column=2):
 
 def filter_valid_rows(rows, lo=0.0, hi=5000.0):
     """[실습 4] (유효 행 리스트, [(CSV 줄 번호, 검사ID, 사유), ...]) 반환."""
+    # TODO: 0~5000 범위 검증, -999는 직접 raise ValueError
+    # float 변환 오류와 IndexError를 처리하고 줄 번호/사유를 남기세요.
+    # enumerate(rows, start=2)로 헤더 다음 줄부터 세어보세요.
     valid = []
     rejected = []
-    for line_no, row in enumerate(rows, start=2):
-        inspect_id = row[0] if row else ""
+    for row in rows:
         try:
             v = float(row[2])
             if v < lo or v > hi:
                 raise ValueError("범위 밖")
             valid.append(row)
-        except IndexError:
-            rejected.append((line_no, inspect_id, "열 부족"))
-        except ValueError as e:
-            reason = "범위 밖" if str(e) == "범위 밖" else "숫자 변환 실패"
-            rejected.append((line_no, inspect_id, reason))
+        except (ValueError, IndexError) as e:
+            rejected.append((row[0], str(e)))
+            continue
     return valid, rejected
 
+
 def save_report(path, total_rows, valid_rows, rejected, stats):
-    """[실습 5] 검증 결과 요약을 UTF-8 텍스트 파일로 저장."""
+    """[실습 5] 리포트 텍스트 파일 저장."""
     # TODO: 전체/유효/제외 건수, 측정값 평균/최대/최소를 lines에 모으고
     # with open(path, 'w', encoding='utf-8')로 저장하세요.
     # 원본에 측정값의 물리 단위가 없으므로 임의로 '도'를 붙이지 마세요.
     lines = ["=== 리포트 ===",
             f"전체 {total_rows}건 / 유효 {len(valid_rows)}건 / 제외 {len(rejected)}건",
-            f"측정값 평균 {stats['mean']} · 최대 {stats['max']} · 최소 {stats['min']}"]
+            f"측정값 평균 {stats['mean']} · 최고 {stats['max']} · 최저 {stats['min']}"]
     with open(path, 'w', encoding='utf-8') as f:
         f.write("\n".join(lines))
+        
+    
+
+
+def verify_part_counts(valid_rows):
+    """[실습 6] 유효 행을 부품별로 다시 묶고 합계가 전체와 같은지 확인."""
+    # TODO: group_by_part(valid_rows)를 재사용하고
+    # 각 부품에 calc_stats(part_rows, 2)를 적용해 건수를 합산하세요.
+    by_valid, _ = group_by_part(valid_rows)     # 정상 데이터 15건 -> 부품명별로 분류 / _: 부품명 누락 건수를 사용X
+    
+    check_sum = 0
+    
+    for v in sorted(by_valid):
+        check_sum += calc_stats(by_valid[v], 2)["count"]
+    print(check_sum == len(valid_rows))
 
 def main():
     header, rows = read_csv_data(DATA_PATH)
@@ -110,14 +127,19 @@ def main():
     after = calc_stats(valid, 2)
     print(f"[4단계] 유효 {len(valid)}건 / 제외 {len(rejected)}건")
     print(f"        범위 검증 후 통계: {after}")
-    for line_no, inspect_id, reason in rejected:
-        print(f"        CSV {line_no}행, 검사ID {inspect_id}: {reason}")
-
+    for item in rejected:
+        print("       ", item)
     if RUN_TO_STEP == 4:
         return
 
     save_report(REPORT_PATH, len(rows), valid, rejected, after)
     print(f"[5단계] 리포트 저장 완료: {REPORT_PATH}")
+    if RUN_TO_STEP == 5:
+        return
+
+    print("[6단계] 부품별 건수 합계 = 유효 건수?", end=" ")
+    verify_part_counts(valid)
+
 
 if __name__ == "__main__":
     main()
