@@ -83,28 +83,3 @@ import numpy as np
 # 실습 5
 print(df.columns.tolist())   
 print(qc.columns.tolist())   
-ref = qc   
-print(ref["result"].duplicated().sum())          
-
-m = df.merge(ref, on="result", how="left")
-print(m.shape)                                       
-print(m[["기준열1", "기준열2", "위험도", "점검주기"]].isna().sum()) 
-
-m["온도구간"] = pd.cut(m["온도"], bins=[0, 40, 50, 200],
-                       labels=["낮음", "보통", "높음"])
-print(m["온도구간"].value_counts())                   
-
-diag = m.groupby("result").agg(
-    측정수=("온도", "count"),
-    평균온도=("온도", "mean"),
-    온도표준편차=("온도", "std"),
-    평균냉각효율=("냉각효율", "mean"),
-    위험도=("위험도", "first"),
-    점검주기=("점검주기", "first"),
-).round(2)
-print(diag.shape)                                     
-print(pd.crosstab(m["result"], m["온도구간"]))    
-print(m["온도"].corr(m["냉각효율"]))                  
-print(m["온도"].corr(m["진동"]))                      
-diag = diag.sort_values(["위험도", "평균온도"], ascending=[False, False])
-print(diag)                     
